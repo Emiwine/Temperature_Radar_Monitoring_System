@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Device Monitoring and Control System</title>
+</head>
+<body>
+    <h1>IoT Device Monitoring and Control System</h1>
+
+    <p>This project implements an IoT-based monitoring and control system, leveraging sensors and MQTT for data communication and device management. It provides features for temperature and presence monitoring, firmware updates via OTA, and MQTT-based device control.</p>
+
+    <h2>Key Features</h2>
+
+    <h3>1. Temperature Monitoring</h3>
+    <ul>
+        <li>Utilizes the AHT10/AHT20 sensor to measure temperature.</li>
+        <li>Publishes temperature data to an MQTT topic (<code>temperature/{deviceId}</code>).</li>
+        <li>Implements error handling for corrupted sensor data.</li>
+    </ul>
+
+    <h3>2. Presence Detection</h3>
+    <ul>
+        <li>Employs the LD2410 radar sensor to detect moving and stationary targets.</li>
+        <li>Publishes presence data, including distance and energy levels, to an MQTT topic (<code>presence/{deviceId}</code>).</li>
+        <li>Includes mechanisms to handle scenarios with no detected targets and send alerts.</li>
+    </ul>
+
+    <h3>3. MQTT Integration</h3>
+    <ul>
+        <li>Connects to an MQTT broker for real-time data communication.</li>
+        <li>Subscribes to topics for receiving commands (e.g., <code>enquireip</code>, <code>restart</code>, <code>ota</code>).</li>
+        <li>Publishes sensor data and alerts for temperature and presence.</li>
+    </ul>
+
+    <h3>4. Wi-Fi and Hotspot Handling</h3>
+    <ul>
+        <li>Automatically connects to a predefined Wi-Fi network.</li>
+        <li>Switches to hotspot mode if Wi-Fi connection fails.</li>
+    </ul>
+
+    <h3>5. Over-The-Air (OTA) Updates</h3>
+    <ul>
+        <li>Enables remote firmware updates through specified URLs.</li>
+        <li>Verifies and updates firmware seamlessly.</li>
+    </ul>
+
+    <h3>6. Error Handling and Alerts</h3>
+    <ul>
+        <li>Detects and reports corrupted data or device misconfigurations.</li>
+        <li>Publishes alerts to dedicated MQTT topics (<code>TemperatureAlert/</code> and <code>PresenceAlert/</code>).</li>
+    </ul>
+
+    <h2>Code Highlights</h2>
+
+    <h3>Main Code Workflow (<code>main.cpp</code>)</h3>
+    <ul>
+        <li>Initializes all components, including EEPROM, sensors, MQTT, and OTA.</li>
+        <li>Continuously monitors Wi-Fi status and publishes sensor data every 5 seconds.</li>
+        <li>Listens for MQTT commands and handles device-specific tasks such as firmware updates.</li>
+    </ul>
+
+    <h3>Temperature Sensor Initialization and Data Handling (<code>deviceControl.cpp</code>)</h3>
+    <ul>
+        <li>Configures the AHT10/AHT20 sensor.</li>
+        <li>Provides real-time temperature readings.</li>
+        <li>Manages sensor errors and ensures reliable data.</li>
+    </ul>
+
+    <h3>Presence Sensor Initialization and Data Handling (<code>deviceControl.cpp</code>)</h3>
+    <ul>
+        <li>Sets up the LD2410 radar sensor for presence detection.</li>
+        <li>Processes and publishes presence data, including stationary and moving targets.</li>
+    </ul>
+
+    <h3>MQTT Implementation (<code>Mqtt.cpp</code>)</h3>
+    <ul>
+        <li>Configures MQTT client and connects to the broker.</li>
+        <li>Manages topic subscriptions and message callbacks.</li>
+        <li>Publishes temperature and presence data.</li>
+        <li>Handles device commands received through MQTT.</li>
+    </ul>
+
+    <h2>Project Setup</h2>
+
+    <h3>1. Hardware Requirements</h3>
+    <ul>
+        <li>ESP32/ESP8266 microcontroller.</li>
+        <li>AHT10/AHT20 temperature sensor.</li>
+        <li>LD2410 radar presence sensor.</li>
+    </ul>
+
+    <h3>2. Software Requirements</h3>
+    <ul>
+        <li>Arduino IDE with necessary libraries (e.g., <code>Adafruit_AHTX0</code>, <code>PubSubClient</code>).</li>
+        <li>MQTT broker (e.g., EMQX).</li>
+    </ul>
+
+    <h3>3. Steps to Run the Project</h3>
+    <ol>
+        <li>Clone the repository and open the project in Arduino IDE.</li>
+        <li>Update Wi-Fi and MQTT credentials in the code.</li>
+        <li>Upload the code to the microcontroller.</li>
+        <li>Monitor the serial output for logs and data.</li>
+    </ol>
+
+    <h2>Key MQTT Topics</h2>
+
+    <table border="1">
+        <tr>
+            <th>Topic</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>temperature/{deviceId}</code></td>
+            <td>Publishes temperature data.</td>
+        </tr>
+        <tr>
+            <td><code>presence/{deviceId}</code></td>
+            <td>Publishes presence detection data.</td>
+        </tr>
+        <tr>
+            <td><code>alert/{deviceId}</code></td>
+            <td>Receives device-specific alerts or commands.</td>
+        </tr>
+        <tr>
+            <td><code>TemperatureAlert/{deviceId}</code></td>
+            <td>Publishes corrupted temperature data alerts.</td>
+        </tr>
+        <tr>
+            <td><code>PresenceAlert/{deviceId}</code></td>
+            <td>Publishes no target detected alerts.</td>
+        </tr>
+    </table>
+
+    <h2>Future Enhancements</h2>
+    <ul>
+        <li>Add support for additional sensors and actuators.</li>
+        <li>Improve error recovery mechanisms.</li>
+        <li>Expand MQTT topic structure for better scalability.</li>
+    </ul>
+
+    <p>This system is a scalable and modular solution for IoT-based device monitoring and control, ensuring reliable performance and ease of integration with existing IoT ecosystems.</p>
+</body>
+</html>
+
